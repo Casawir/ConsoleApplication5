@@ -46,6 +46,7 @@ class Zamowienie
 		void dodajPozycje(Pozycja &p);
 		double obliczWartosc();
 		wstring toString();
+		string nazwa = "janusz"; //test 
 		~Zamowienie();
 
 };

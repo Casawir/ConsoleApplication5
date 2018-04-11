@@ -93,7 +93,7 @@ wstring& FormatCena(wstring &text) //funkcja formatujaca cene, poniewaz funkcja 
 int main()
 {
 	setlocale(LC_ALL, "polish"); // umożliwienie wyświetlania polskich znaków w konsoli
-	main_menu::Main_menu();
+	main_menu::Main_menu_zamowienia();
     return 0;
 }
 
