@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
 #include "zamowienia.h"
-#include "main_menu.h"
+
 
 
 wstring Pozycja::toString()
@@ -49,7 +49,7 @@ double Zamowienie::obliczWartosc()
 	else
 	{
 		double wartosc = 0;
-		for (int i = 0; i < ileDodanych; i++)
+		for (int i = 0; i < ileDodanych; i++) // zliczanie wartosci wszystkich pozycji
 		{
 			wartosc += pozycje[i].obliczWartosc();
 		}
@@ -64,7 +64,7 @@ wstring Zamowienie::toString()
 	wstring spis;
 	for (int i = 0; i < ileDodanych; i++) 
 	{
-		spis = spis + to_wstring(i + 1) + L".\t" + pozycje[i].toString();
+		spis = spis + to_wstring(i + 1) + L".\t" + pozycje[i].toString(); // pobranie pozycji i dodanie do zmiennej wstring
 	}
 	wstring temp = (to_wstring(obliczWartosc()));
 	spis = spis + L"Wartość Zamówienia: " + FormatCena(temp) + L" zł\n\n";
@@ -75,6 +75,7 @@ Zamowienie::~Zamowienie()
 {
 	delete[] pozycje;
 	pozycje = nullptr;
+	wcout << L"Pomyślnie usunięto zamówienie" << endl;
 }
 
 
@@ -86,14 +87,5 @@ wstring& FormatCena(wstring &text) //funkcja formatujaca cene, poniewaz funkcja 
 
 	return text;
 
-}
-
-
-
-int main()
-{
-	setlocale(LC_ALL, "polish"); // umożliwienie wyświetlania polskich znaków w konsoli
-	main_menu::Main_menu_zamowienia();
-    return 0;
 }
 

@@ -5,16 +5,21 @@
 void main_menu::Main_menu_zamowienia()
 {
 	menu_zamowienia menu_list = MENU_zamowienia;
-	short unsigned int input = 0;
-	vector<Zamowienie&> zamowienia;
-	Zamowienie * nowe_zamowienie;
+	unsigned int input = 0;
 
 	wcout << L"Witaj w programie do obs³ugi zamowieñ" << endl;
 
 	while (menu_list != EXIT_)
 	{
 		cout << "Menu:" << endl;
-		if (!Input(L"1.Dodaj zamówienie\n2.Wyœwietl zamówienia\n3.PrzejdŸ do zamówienia\n4.Wyjœcie\n", input))
+		wcout << to_wstring(DODAJ_ZAM) + L". Dodaj zamówienie" << endl;
+		wcout << to_wstring(WYS_ZAM) + L". Wyœwietl zamówienia" << endl;
+		wcout << to_wstring(PRZEJDZ) + L". PrzejdŸ do zamówienia" << endl;
+		wcout << to_wstring(USUN) + L". Usuñ zamówienie" << endl;
+		wcout << to_wstring(EXIT_) + L". WyjdŸ" << endl;
+
+
+		if (!Input(L"", input))
 			return;
 
 		switch (input)
@@ -26,29 +31,67 @@ void main_menu::Main_menu_zamowienia()
 		}
 		case WYS_ZAM:
 		{
-			for (auto i : zamowienia) // c++ for loop
+			if (zamowienia.empty())
+				wcout << L"Brak zamówieñ\n";
+			else
 			{
-				cout << i.nazwa << endl;
+				for (auto *i : zamowienia)
+				{
+					cout << i->GetNumerZam() << endl;
+				}
 			}
+
 			break;
 		}
 		case PRZEJDZ:
 		{
 			if (zamowienia.size() == 0)
-				wcout << L"Brak zamówieñ";
+				wcout << L"Brak zamówieñ\n";
 			else
 			{
-				if (!Input(L"Podaj numer zamówienia", input))
+				if (!Input(L"Podaj numer zamówienia\n", input))
 					return;
 
-				if (input >= zamowienia.size())
-					wcout << L"Brak zamówienia o podanym numerze";
-
-				Main_menu_pozycje(zamowienia[input-1]);
+				for (auto *i : zamowienia)
+				{
+					if(i->GetNumerZam() == input)
+					{
+						Main_menu_pozycje(*(zamowienia[input - 100000]));
+						break;
+					}
+					else if (i == zamowienia.back() && i->GetNumerZam() != input) // tutaj wazna kolejnosc !!!!
+						wcout << L"Brak zamówienia o podanym numerze\n";
+				}
 			}
 			break;
 		}
+		case USUN:
+		{
+			if (zamowienia.size() == 0)
+				wcout << L"Brak zamówieñ\n";
+			else
+			{
+				if (!Input(L"Podaj numer zamówienia\n", input))
+					return;
 
+				int temp = 0;
+				for (auto *i : zamowienia)
+				{
+					if (i->GetNumerZam() == input)
+					{
+						delete i;
+						zamowienia.erase(zamowienia.begin() + temp);
+						break;
+					}
+					else if (i == zamowienia.back() && i->GetNumerZam() != input) // tutaj wazna kolejnosc !!!!
+						wcout << L"Brak zamówienia o podanym numerze\n";
+
+					temp++;
+
+				}
+			}
+			break;
+		}
 		case EXIT_:
 			menu_list = EXIT_;
 			break;
@@ -58,21 +101,22 @@ void main_menu::Main_menu_zamowienia()
 
 
 
-Zamowienie& main_menu::dodaj_zamowienie()
+Zamowienie* main_menu::dodaj_zamowienie()
 {
 	short unsigned int input = 0;
 
 
-	if (!Input(L"Podaj iloœæ pozycji nowego zamówienia( 0 - wartoœæ domyœlna)", input))
-		return *(new Zamowienie(input));
+	if (!Input(L"Podaj iloœæ pozycji nowego zamówienia( 0 - wartoœæ domyœlna)\n", input))
+		return new Zamowienie(input);
 
+	int id = 0;
+
+	zamowienia.empty() ? id = 100000 : id = zamowienia.back()->GetNumerZam() + 1;
 
 	if (input != 0)
-		return *(new Zamowienie(input));
+		return new Zamowienie(id, input);
 	else
-		return *(new Zamowienie);
-
-
+		return new Zamowienie(id);
 }
 
 
@@ -84,8 +128,15 @@ void main_menu::Main_menu_pozycje(Zamowienie& nowe_zamowienie)
 
 	while (menu_list != EXIT)
 	{
+
 		cout << "Menu pozycji:" << endl;
-		if (!Input(L"1. Dodaj pozycje\n2. Wyœwietl Wartoœæ zamówienia\n3. Wyœwietl wszystkie pozycje zamówienia\n4.Wyjœcie\n", input))
+		wcout << to_wstring(DODAJ_POZ) + L". Dodaj pozycje" << endl;
+		wcout << to_wstring(WYS_WARTOSC) + L". Wyœwietl Wartoœæ zamówienia" << endl;
+		wcout << to_wstring(WYSWIETL) + L". Wyœwietl wszystkie pozycje zamówienia" << endl;
+		wcout << to_wstring(EXIT) + L". Cofnij" << endl;
+
+
+		if (!Input(L"", input))
 			return;
 
 		cout << endl;
@@ -138,5 +189,4 @@ void main_menu::dodaj_pozycje(Zamowienie &nowe_zamowienie)
 	{
 		wcout << L"Przekroczono zakres iloœci pozycji!\n\n";
 	}
-	//	}
 }
